@@ -1,1 +1,1 @@
-This is the repo where I story my NixOS config.
+This is the repo where I store my NixOS config.
