@@ -29,11 +29,7 @@
     firefox
   ];
 
-  # List services that you want to enable:
-
-  # Enable the OpenSSH daemon.
   # services.openssh.enable = true;
-
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
   # networking.firewall.allowedUDPPorts = [ ... ];
@@ -46,7 +42,7 @@
   services.xserver.layout = "us";
   services.xserver.xkbOptions = "eurosign:e";
   services.xserver.displayManager.sddm.enable = true;
-  services.xserver.desktopManager.plasma5.enable = true;
+  services.xserver.desktopManager.xfce.enable = true;
 
   users.extraUsers.rene = {
     isNormalUser = true;
