@@ -27,6 +27,8 @@
     links
     vim
     firefox
+    docker
+    python
   ];
 
   # services.openssh.enable = true;
