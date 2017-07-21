@@ -32,6 +32,7 @@
     python
     thunderbird
     nmap
+    keepass
   ];
 
   # services.openssh.enable = true;
