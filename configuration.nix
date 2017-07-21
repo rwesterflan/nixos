@@ -29,6 +29,7 @@
     firefox
     docker
     python
+    thunderbird
   ];
 
   # services.openssh.enable = true;
