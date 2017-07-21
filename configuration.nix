@@ -33,6 +33,7 @@
     thunderbird
     nmap
     keepass
+    libreoffice
   ];
 
   # services.openssh.enable = true;
