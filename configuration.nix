@@ -21,6 +21,7 @@
 
   time.timeZone = "Europe/Amsterdam";
 
+  # $ nix-env -qaP | grep wget
   environment.systemPackages = with pkgs; [
     wget
     git
@@ -30,6 +31,7 @@
     docker
     python
     thunderbird
+    nmap
   ];
 
   # services.openssh.enable = true;
@@ -38,6 +40,7 @@
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
+
   # services.printing.enable = true;
 
   services.xserver.enable = true;
@@ -61,6 +64,7 @@
     createHome = true;
   };
 
+  # The NixOS release to be compatible with for stateful data such as databases.
   system.stateVersion = "17.03";
 
 }
