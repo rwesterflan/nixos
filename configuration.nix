@@ -6,10 +6,11 @@
       ./hardware-configuration.nix
     ];
 
-  boot.loader.grub.enable = true;
-  boot.loader.grub.version = 2;
-  boot.loader.grub.device = "/dev/sda"; 
-  networking.hostName = "nixos"; 
+  boot.loader.grub.enable = false;
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
+
+  networking.hostName = "desktop-q32hoam"; 
   networking.wireless.enable = true; 
 
   i18n = {
@@ -20,7 +21,6 @@
 
   time.timeZone = "Europe/Amsterdam";
 
-  # $ nix-env -qaP | grep wget
   environment.systemPackages = with pkgs; [
     wget
     git
@@ -37,7 +37,6 @@
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
-
   # services.printing.enable = true;
 
   services.xserver.enable = true;
@@ -61,7 +60,8 @@
     createHome = true;
   };
 
-  # The NixOS release to be compatible with for stateful data such as databases.
   system.stateVersion = "17.03";
 
 }
+
+
