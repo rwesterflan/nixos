@@ -34,6 +34,7 @@
     nmap
     keepass
     libreoffice
+    chromium
   ];
 
   # services.openssh.enable = true;
@@ -50,6 +51,7 @@
   services.xserver.xkbOptions = "eurosign:e";
   services.xserver.displayManager.sddm.enable = true;
   services.xserver.desktopManager.xfce.enable = true;
+  services.xserver.desktopManager.plasma5.enable = true;
 
   users.extraUsers.rene = {
     isNormalUser = true;
