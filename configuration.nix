@@ -6,11 +6,50 @@
       ./hardware-configuration.nix
     ];
 
-  boot.loader.grub.enable = false;
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
+  boot = {
+    initrd = {
+      availableKernelModules = [ "ahci" ];
+      kernelModules = [ "fbcon" ];
+      luks.devices = [{
+        name = "cypher";
+        device = "/dev/disk/by-uuid/73ef5df7-d331-473e-ac6e-42f0176d37da";
+      }];
+    };
 
-  networking.hostName = "desktop-q32hoam"; 
+    kernelModules = [ "kvm-intel" "fbcon" ];
+
+    loader = {
+      grub.enable = false;
+      systemd-boot.enable = true;
+      efi.canTouchEfiVariables = true;
+    };
+
+    supportedFilesystems = [ "zfs" ];
+
+    tmpOnTmpfs = true;
+  };
+
+  fileSystems."/" = {
+    device = "tank/nixos";
+    fsType = "zfs";
+  };
+
+  fileSystems."/nix" = {
+    device = "tank/nix";
+    fsType = "zfs";
+  };
+
+  fileSystems."/home" = {
+    device = "tank/home";
+    fsType = "zfs";
+  };
+
+  fileSystems."/boot" = {
+    device = "/dev/disk/by-partuuid/a9669530-a697-4656-98e6-326b5099639b";
+    fsType = "vfat";
+  };
+
+  networking.hostName = "sakuya"; 
   networking.wireless.enable = true; 
 
   i18n = {
@@ -21,8 +60,8 @@
 
   time.timeZone = "Europe/Amsterdam";
 
-  # $ nix-env -qaP | grep wget
   environment.systemPackages = with pkgs; [
+    cryptsetup
     wget
     git
     links
@@ -35,23 +74,52 @@
     keepass
     libreoffice
     chromium
+    binutils
+    screen
+    networkmanagerapplet
+    gnupg
+    steam
+    tahoelafs
+    openvpn
+    nfsUtils
   ];
 
-  # services.openssh.enable = true;
-  # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
+  nixpkgs = {
+    config = {
+      allowUnfree = true;
+    };
+  };
 
-  # services.printing.enable = true;
+  services.redshift = {
+    enable = true;
+    latitude = "52.7";
+    longitude = "6.22";
+  };
+
+  services.openssh = {
+    enable = true;
+    passwordAuthentication = false;
+    permitRootLogin = "no";
+  };
+
+  services.avahi = {
+    enable = true;
+    nssmdns = true;
+  };
+
+  programs.zsh.enable = true;
+
+  networking.firewall = {
+     allowedTCPPorts = [ "22" ];
+  };
+
+  services.printing.enable = true;
 
   services.xserver.enable = true;
   services.xserver.layout = "us";
   services.xserver.xkbOptions = "eurosign:e";
   services.xserver.displayManager.sddm.enable = true;
   services.xserver.desktopManager.xfce.enable = true;
-  services.xserver.desktopManager.plasma5.enable = true;
 
   users.extraUsers.rene = {
     isNormalUser = true;
@@ -66,11 +134,8 @@
     uid = 1000;
     home = "/home/rene/";
     createHome = true;
+    shell = "/run/current-system/sw/bin/zsh";
   };
 
-  # The NixOS release to be compatible with for stateful data such as databases.
-  system.stateVersion = "17.03";
-
+  system.stateVersion = "18.03";
 }
-
-
