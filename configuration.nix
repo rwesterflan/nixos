@@ -12,7 +12,7 @@
       kernelModules = [ "fbcon" ];
       luks.devices = [{
         name = "cypher";
-        device = "/dev/disk/by-uuid/73ef5df7-d331-473e-ac6e-42f0176d37da";
+        device = "/dev/disk/by-uuid/E3CB-73A9";
       }];
     };
 
@@ -24,33 +24,14 @@
       efi.canTouchEfiVariables = true;
     };
 
-    supportedFilesystems = [ "zfs" ];
-
     tmpOnTmpfs = true;
-  };
-
-  fileSystems."/" = {
-    device = "tank/nixos";
-    fsType = "zfs";
-  };
-
-  fileSystems."/nix" = {
-    device = "tank/nix";
-    fsType = "zfs";
-  };
-
-  fileSystems."/home" = {
-    device = "tank/home";
-    fsType = "zfs";
-  };
-
-  fileSystems."/boot" = {
-    device = "/dev/disk/by-partuuid/a9669530-a697-4656-98e6-326b5099639b";
-    fsType = "vfat";
+    kernelPackages = pkgs.linuxPackages_latest;
   };
 
   networking.hostName = "sakuya"; 
-  networking.wireless.enable = true; 
+  networking.hostId = "8425e349";
+  networking.networkmanager.enable = true;
+  hardware.bluetooth.enable = true;
 
   i18n = {
     consoleFont = "Lat2-Terminus16";
@@ -61,28 +42,65 @@
   time.timeZone = "Europe/Amsterdam";
 
   environment.systemPackages = with pkgs; [
-    cryptsetup
-    wget
-    git
-    links
-    vim
-    firefox
-    docker
-    python
-    thunderbird
-    nmap
-    keepass
-    libreoffice
-    chromium
+    bash 
     binutils
-    screen
-    networkmanagerapplet
+    chromium
+    cryptsetup
+    discord
+    docker
+    file
+    freerdp
+    gimp
+    git
     gnupg
-    steam
-    tahoelafs
-    openvpn
+    i3 i3lock i3status
+    inkscape
+    kdeconnect
+    keepass
+    keepassx2
+    libreoffice
+    links
+    lsof
+    mkpasswd
+    networkmanagerapplet networkmanager networkmanager_openvpn
+    neofetch
     nfsUtils
+    nmap
+    openvpn
+    packer
+    psmisc
+    python
+    pypy
+    pythonPackages.virtualenv
+    screen
+    seafile-client
+    steam
+    tigervnc
+    thunderbird
+    tlp
+    unzip
+    vagrant
+    vim
+    virtualbox
+    wget
+    xfce.exo
+    xfce.terminal
+    xfce.thunar
+    xfce.xfce4-hardware-monitor-plugin
+    xfce.xfce4icontheme
+    xfce.xfce4settings
+    xfce.xfce4_whiskermenu_plugin
+    xfontsel
+    zip
   ];
+
+
+  hardware.opengl.driSupport32Bit = true;
+
+  virtualisation.virtualbox.host.enable = true;
+  virtualisation.docker.enable = true;
+
+  system.autoUpgrade.enable = true;
 
   nixpkgs = {
     config = {
@@ -98,7 +116,7 @@
 
   services.openssh = {
     enable = true;
-    passwordAuthentication = false;
+    passwordAuthentication = true;
     permitRootLogin = "no";
   };
 
@@ -107,19 +125,29 @@
     nssmdns = true;
   };
 
-  programs.zsh.enable = true;
-
+  #programs.zsh.enable = true;
+  services.zfs.autoSnapshot.enable = true;
+  
   networking.firewall = {
-     allowedTCPPorts = [ "22" ];
+     allowedTCPPorts = [ 22 ];
+     allowedUDPPorts = [ 27036 27037 ];
   };
 
+  programs.adb.enable = true;
+   
   services.printing.enable = true;
-
-  services.xserver.enable = true;
-  services.xserver.layout = "us";
-  services.xserver.xkbOptions = "eurosign:e";
-  services.xserver.displayManager.sddm.enable = true;
-  services.xserver.desktopManager.xfce.enable = true;
+  services.pcscd.enable = true;
+  services.xserver = {  
+    enable = true;
+    layout = "us";
+    xkbOptions = "eurosign:e";
+    displayManager.lightdm.enable = true;
+    desktopManager.xfce.enable = true;
+    synaptics = {
+        enable = true;
+        twoFingerScroll = true;
+    };
+  };
 
   users.extraUsers.rene = {
     isNormalUser = true;
@@ -130,12 +158,19 @@
 	"wheel"
 	"networkmanager"
 	"audio"
+        "docker"
+	"dialout"
+        "adbusers"
      ];
     uid = 1000;
     home = "/home/rene/";
     createHome = true;
-    shell = "/run/current-system/sw/bin/zsh";
+    shell = "/run/current-system/sw/bin/bash";
   };
 
-  system.stateVersion = "18.03";
+  users.extraGroups.rene= {
+    gid = 1000;
+  };
+
+  system.stateVersion = "17.09";
 }
