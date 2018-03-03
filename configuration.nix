@@ -94,7 +94,6 @@
     zip
   ];
 
-
   hardware.opengl.driSupport32Bit = true;
 
   virtualisation.virtualbox.host.enable = true;
@@ -119,7 +118,7 @@
     passwordAuthentication = true;
     permitRootLogin = "no";
   };
-
+  
   services.avahi = {
     enable = true;
     nssmdns = true;
@@ -134,7 +133,9 @@
   };
 
   programs.adb.enable = true;
-   
+
+#  powerManagement.cpuFreqGovernor = null;
+  services.tlp.enable = true;   
   services.printing.enable = true;
   services.pcscd.enable = true;
   services.xserver = {  
